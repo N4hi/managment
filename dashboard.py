@@ -7,7 +7,7 @@ from storage import add_items
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.geometry("1350x700+0+0")
+        self.root.geometry("1920x1080+0+0")
         self.root.title("الناهي للمبيعات")
         self.root.config(bg="white")
 
@@ -15,7 +15,7 @@ class App:
         self.icon_title = PhotoImage(file="images/logo1.png")
         title = Label(self.root, text="الناهي للمبيعات", image=self.icon_title, compound=LEFT,
                       font=("times new roman", 20, 'bold'), fg="blue", anchor="w", padx=20)
-        title.place(x=1450, y=0, relwidth=5, height=70)
+        title.place(x=1650, y=0, relwidth=5, height=70)
 
         # logout
         btn_logout = Button(self.root, text="Logout", cursor="hand2", font=("times new roman", 20, 'bold'), bg='red')
@@ -32,7 +32,7 @@ class App:
         self.menulogo = ImageTk.PhotoImage(self.menulogo)
 
         RightMenu = Frame(self.root, bd=2, borderwidth=2, height=50, relief=RIDGE, bg="white")
-        RightMenu.place(x=1505, y=100, width=200, height=1920)
+        RightMenu.place(x=1720, y=100, width=200, height=1920)
 
         lbl_menulogo = Label(RightMenu, image=self.menulogo)
         lbl_menulogo.pack(side=TOP, fill=X)
@@ -80,7 +80,7 @@ class App:
     
         # left frame
         Leftframe = Frame(self.root, borderwidth=2, height=1920, width=1080, relief=RIDGE, bg="#1E2A5E")
-        Leftframe.place(x=0, y=100, width=1504, height=1920)
+        Leftframe.place(x=0, y=100, width=1724, height=1920)
 
         # fast reach
         self.fastreach = Label(self.root, text="الوصول السريع", fg="white", bg='#1E2A5E', font=("times new roman", 20)).place(x=1300, y=180)
@@ -116,7 +116,7 @@ class App:
             self.storage_dropdown_frame = None  #hide the list
         else:
             self.storage_dropdown_frame = Frame(self.root, bd=2, relief=RIDGE, bg="white") #show the list
-            self.storage_dropdown_frame.place(x=1505, y=200, width=200, height=150)
+            self.storage_dropdown_frame.place(x=1520, y=300, width=200, height=150)
             btn_material = Button(self.storage_dropdown_frame, text="المواد", cursor="hand2", command=self.new_items_add, font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_fills = Button(self.storage_dropdown_frame, text="التعبئات", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_parcodeprint = Button(self.storage_dropdown_frame, text="طباعة باركود", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
