@@ -18,6 +18,11 @@ class add_items:
         title = Label(add_items_frame, text="تفاصيل المنتج", font=("times new roman",  15, 'bold'), bg="#0f4d7d", fg="white").pack(side=TOP, fill=X)
 
         lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
+        lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
+        lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
+        lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
+        lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
+        lbl_category = Label(add_items_frame, text="المجموعة", font=("times new roman", 18), bg="white").place(x=300, y=60)
 
 if __name__ == "__main__":
     root = Tk()

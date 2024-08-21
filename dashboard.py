@@ -3,6 +3,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from category import categoryClass
 from storage import add_items
+from fills import fillsClass
 
 class App:
     def __init__(self, root):
@@ -118,12 +119,17 @@ class App:
             self.storage_dropdown_frame = Frame(self.root, bd=2, relief=RIDGE, bg="white") #show the list
             self.storage_dropdown_frame.place(x=1520, y=300, width=200, height=150)
             btn_material = Button(self.storage_dropdown_frame, text="المواد", cursor="hand2", command=self.new_items_add, font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
-            btn_fills = Button(self.storage_dropdown_frame, text="التعبئات", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
+            btn_fills = Button(self.storage_dropdown_frame, text="التعبئات", cursor="hand2",command=self.fill, font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_parcodeprint = Button(self.storage_dropdown_frame, text="طباعة باركود", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_category = Button(self.storage_dropdown_frame, text="المجموعات", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
     def new_items_add(self):
         self.new_win = Toplevel(self.root)
         self.new_obj = add_items(self.new_win)
+
+    def fill(self):
+        self.new_win = Toplevel(self.root)
+        self.new_obj = fillsClass(self.new_win)
+
 # Initialize the main window
 if __name__ == "__main__":
     root = Tk()
