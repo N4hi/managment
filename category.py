@@ -24,7 +24,7 @@ class categoryClass:
             my_entry.delete(0, END)
 
             #add cliked list item to entry box 
-            my_entry.insert(0, my_listbox.get(my_listbox.curselection()))
+            my_entry.insert(0, my_listbox.get(ACTIVE))
 
 
         #create func to check entry vs listbox
@@ -36,9 +36,9 @@ class categoryClass:
                 data =my_list
             else:
                 data = []
-            for item in my_list:
-                if typed.lower() in item.lower():
-                    data.append(item)
+                for item in my_list:
+                    if typed.lower() in item.lower():
+                        data.append(item)
 
             update(data)
 
@@ -65,11 +65,11 @@ class categoryClass:
         #add item to list
         my_list = ["one" , "onlyone" ,  "two" , "three" , "tree"  , ]
         for item in my_list:
-            my_listbox.insert(0, item)
+            my_listbox.insert(END, item)
         update(my_list)
 
 
-        my_listbox.bind(" <<ListboxSelect>>" , fillout)
+        my_listbox.bind("<<ListboxSelect>>" , fillout)
 
         my_entry.bind("<KeyRelease>" , check)
 
