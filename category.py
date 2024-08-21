@@ -72,3 +72,10 @@ class categoryClass:
         my_listbox.bind(" <<ListboxSelect>>" , fillout)
 
         my_entry.bind("<KeyRelease>" , check)
+
+
+
+if __name__=="__main__":
+    root=Tk()
+    inv = categoryClass(root)
+    root.mainloop()
