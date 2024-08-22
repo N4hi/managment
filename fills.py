@@ -1,37 +1,108 @@
+import sqlite3
 from tkinter import *
-from tkinter import ttk
-from PIL import Image, ImageTk
+from tkinter import messagebox
+
 class fillsClass:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1100x750+220+130")
         self.root.title("الناهي للمبيعات")
         self.root.config(bg="white")
-        self.root.focus_force()
 
-        
-        srch_lbl = Label(self.root, text="البحث",bg= "white", fg='#1E2A5E', font=("arial", 20 )).place(x=900, y=40)
-        srch_bar = Entry(self.root, bd=2, bg="white", fg="#1E2A5E", justify=CENTER, relief=RIDGE, font=("arial", 18))
+        # all variables
+        self.var_srch = StringVar()
+
+        # initialize the database and create the table
+        self.initialize_database()
+
+        # initialize components
+        srch_bar = Entry(self.root, textvariable=self.var_srch, bd=2, bg="white", fg="#1E2A5E", justify=CENTER, relief=RIDGE, font=("arial", 18))
         srch_bar.place(x=350, y=40, width=500)
-        
-        fills_frame = Frame(self.root, bd=2, bg="white", borderwidth=2, relief=RIDGE, )
-        fills_frame.place(x=350, y=120, width=500, height=500)
-        fills_lbl = Label(self.root, text="اسم التعبئة", fg='#1E2A5E', font=("arial", 20 )).place(x=350, y=100, width=500, height=30)
+        srch_lbl = Button(self.root, text="البحث", bg="white", fg='#1E2A5E', font=("arial", 20)).place(x=900, y=40)
 
-        add_btn = Button(self.root, text="اضافة", cursor="hand2",command=self.add_cat, font=("times new roman", 15, "bold"), bg='#1E2A5E', fg="white")
+        # Listbox 
+        self.list_box = Listbox(self.root, bd=2, bg="white", borderwidth=2, relief=RIDGE)
+        self.list_box.place(x=350, y=120, width=500, height=500)
+
+        self.scrly = Scrollbar(self.list_box, orient=VERTICAL)
+        self.scrly.pack(side=RIGHT, fill=Y)
+        self.scrly.config(command=self.list_box.yview)
+
+        add_btn = Button(self.root, text="اضافة", cursor="hand2", command=self.add_fil, font=("times new roman", 15, "bold"), bg='#1E2A5E', fg="white")
         add_btn.place(x=750, y=630, width=100, height=50)
-        remove_btn = Button(self.root, text="حذف", cursor="hand2", font=("times new roman", 15, "bold"), bg='red', fg="white")
+
+        remove_btn = Button(self.root, text="حذف", cursor="hand2", command=self.remove_btn, font=("times new roman", 15, "bold"), bg='red', fg="white")
         remove_btn.place(x=630, y=630, width=100, height=50)
 
-    
+        #load existing items
+        self.load_items()
 
-    def add_cat(self):
+    def initialize_database(self):
+        # connect to the database
+        conn = sqlite3.connect('items.db')
+        cursor = conn.cursor()
+
+        # create the items table if it doesn't exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS items (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT NOT NULL
+                          )''')
+
+        # commit changes and close the connection
+        conn.commit()
+        conn.close()
+
+    def remove_btn(self):
+        selected_item = self.list_box.curselection()
+        if selected_item:
+            item_name = self.list_box.get(selected_item)
+            confirm = messagebox.askyesno("تأكيد", f"هل أنت متأكد أنك تريد حذف '{item_name}'؟", parent=self.root)
+            if confirm:
+                conn = sqlite3.connect('items.db')
+                cursor = conn.cursor()
+                cursor.execute("DELETE FROM items WHERE name = ?", (item_name,))
+                conn.commit()
+                conn.close()
+                self.load_items()
+                messagebox.showinfo("نجاح", "تم حذف العنصر بنجاح", parent=self.root)
+        else:
+            messagebox.showwarning("تحذير", "من فضلك اختر عنصرًا لحذفه", parent=self.root)
+
+    def add_fil(self):
         self.new_win = Toplevel(self.root)
         self.new_win.geometry("600x600+500+130")
         self.new_win.title("اضافة تعبئات")
-        self.new_obj = (self.new_win)
+        self.new_win.focus_force()
 
-if __name__=="__main__":
-    root=Tk()
+        srch1_bar = Entry(self.new_win, bd=2, bg="white", fg="#1E2A5E", justify=CENTER, relief=RIDGE, font=("arial", 18))
+        srch1_bar.place(x=100, y=50, width=300)
+
+        def save_item():
+            item_name = srch1_bar.get()
+            if item_name:
+                conn = sqlite3.connect('items.db')
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO items (name) VALUES (?)", (item_name,))
+                conn.commit()
+                messagebox.showinfo("Sucess", "تم اضافة التعبئة بنجاح", parent=self.root)
+                conn.close()
+                srch1_bar.delete(0, END)
+                self.load_items()
+
+        add1_btn = Button(self.new_win, text="اضافة", cursor="hand2", command=save_item, font=("times new roman", 25, "bold"), bg='#1E2A5E', fg="white")
+        add1_btn.place(x=450, y=40, width=100, height=50)
+
+    def load_items(self):
+        self.list_box.delete(0, END)
+        conn = sqlite3.connect('items.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM items")
+        items = cursor.fetchall()
+        for item in items:
+            self.list_box.insert(END, item[0])
+        conn.close()
+
+if __name__ == "__main__":
+    root = Tk()
     fil = fillsClass(root)
     root.mainloop()
