@@ -15,10 +15,11 @@ class fillsClass:
         # initialize the database and create the table
         self.initialize_database()
 
-        # initialize components
+        # Initialize components
         srch_bar = Entry(self.root, textvariable=self.var_srch, bd=2, bg="white", fg="#1E2A5E", justify=CENTER, relief=RIDGE, font=("arial", 18))
         srch_bar.place(x=350, y=40, width=500)
         srch_lbl = Button(self.root, text="البحث", bg="white", fg='#1E2A5E', font=("arial", 20)).place(x=900, y=40)
+        srch_bar.bind("<KeyRelease>", self.search_items)
 
         # Listbox 
         self.list_box = Listbox(self.root, bd=2, bg="white", borderwidth=2, relief=RIDGE)
@@ -101,6 +102,20 @@ class fillsClass:
         for item in items:
             self.list_box.insert(END, item[0])
         conn.close()
+    
+    def search_items(self, event):
+        search_text = self.var_srch.get().strip()
+
+        conn = sqlite3.connect('items.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM items WHERE name LIKE ?", ('%' + search_text + '%',))
+        items = cursor.fetchall()
+        conn.close()
+
+        self.list_box.delete(0, END)
+        for item in items:
+            self.list_box.insert(END, item[0])
+
 
 if __name__ == "__main__":
     root = Tk()
