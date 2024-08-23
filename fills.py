@@ -1,6 +1,7 @@
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+from create_db import initialize_database, insert_items, get_items, delete_item
 
 class fillsClass:
     def __init__(self, root):
@@ -9,11 +10,13 @@ class fillsClass:
         self.root.title("الناهي للمبيعات")
         self.root.config(bg="white")
 
+
+        #initialize database
+        initialize_database()
+
         # all variables
         self.var_srch = StringVar()
 
-        # initialize the database and create the table
-        self.initialize_database()
 
         # Initialize components
         srch_bar = Entry(self.root, textvariable=self.var_srch, bd=2, bg="white", fg="#1E2A5E", justify=CENTER, relief=RIDGE, font=("arial", 18))
@@ -38,32 +41,13 @@ class fillsClass:
         #load existing items
         self.load_items()
 
-    def initialize_database(self):
-        # connect to the database
-        conn = sqlite3.connect('items.db')
-        cursor = conn.cursor()
-
-        # create the items table if it doesn't exist
-        cursor.execute('''CREATE TABLE IF NOT EXISTS items (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            name TEXT NOT NULL
-                          )''')
-
-        # commit changes and close the connection
-        conn.commit()
-        conn.close()
-
     def remove_btn(self):
         selected_item = self.list_box.curselection()
         if selected_item:
             item_name = self.list_box.get(selected_item)
             confirm = messagebox.askyesno("تأكيد", f"هل أنت متأكد أنك تريد حذف '{item_name}'؟", parent=self.root)
             if confirm:
-                conn = sqlite3.connect('items.db')
-                cursor = conn.cursor()
-                cursor.execute("DELETE FROM items WHERE name = ?", (item_name,))
-                conn.commit()
-                conn.close()
+                delete_item(item_name)
                 self.load_items()
                 messagebox.showinfo("نجاح", "تم حذف العنصر بنجاح", parent=self.root)
         else:
@@ -81,12 +65,8 @@ class fillsClass:
         def save_item():
             item_name = srch1_bar.get()
             if item_name:
-                conn = sqlite3.connect('items.db')
-                cursor = conn.cursor()
-                cursor.execute("INSERT INTO items (name) VALUES (?)", (item_name,))
-                conn.commit()
+                insert_items(item_name)
                 messagebox.showinfo("Sucess", "تم اضافة التعبئة بنجاح", parent=self.root)
-                conn.close()
                 srch1_bar.delete(0, END)
                 self.load_items()
 
@@ -95,13 +75,10 @@ class fillsClass:
 
     def load_items(self):
         self.list_box.delete(0, END)
-        conn = sqlite3.connect('items.db')
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM items")
-        items = cursor.fetchall()
+        items = get_items()
         for item in items:
             self.list_box.insert(END, item[0])
-        conn.close()
+       
     
     def search_items(self, event):
         search_text = self.var_srch.get().strip()
