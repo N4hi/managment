@@ -121,7 +121,7 @@ class App:
             btn_material = Button(self.storage_dropdown_frame, text="المواد", cursor="hand2", command=self.new_items_add, font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_fills = Button(self.storage_dropdown_frame, text="التعبئات", cursor="hand2",command=self.new_fill_add, font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
             btn_parcodeprint = Button(self.storage_dropdown_frame, text="طباعة باركود", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
-            btn_category = Button(self.storage_dropdown_frame, text="المجموعات", cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
+            btn_category = Button(self.storage_dropdown_frame, text="المجموعات",command=self.new_cat_add, cursor="hand2", font=("times new roman", 12, "bold"), bg='white').pack(side=TOP, fill=X)
     def new_items_add(self):
         self.new_win = Toplevel(self.root)
         self.new_obj = add_items(self.new_win)
@@ -132,6 +132,11 @@ class App:
         self.new_win.grab_set()
         self.new_win.focus_force()
         
+    def new_cat_add(self):
+        self.new_win =Toplevel(self.root)
+        self.new_obj =fillsClass(self.new_win)
+        self.new_win.grab_set()
+        self.new_win.focus_force()
 # Initialize the main window
 if __name__ == "__main__":
     root = Tk()

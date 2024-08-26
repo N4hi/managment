@@ -2,9 +2,9 @@ import sqlite3
 def initialize_database():
     conn = sqlite3.connect('items.db')
     curr = conn.cursor()
-    curr.execute('''CREATE TABLE IF NOT EXISTS items (
+    curr.execute('''CREATE TABLE IF NOT EXISTS inventory (
                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                      name TEXT NOT NULL
+                      fills TEXT, category TEXT
                     )''')
 
     conn.commit()
