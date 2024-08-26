@@ -33,6 +33,8 @@ class add_items:
         self.var_num = StringVar()
         self.var_buy = StringVar()
         self.var_sell = StringVar
+        self.data_from_db = StringVar()
+        self.data_from_db =self.fetch_data_from_db()
         
         add_items_frame = Frame(self.root, bd=2, relief=RIDGE, bg= 'white')
         add_items_frame.place(x=600, y=10, width=550, height=600)
@@ -59,9 +61,14 @@ class add_items:
         self.lbl_sell = Label(add_items_frame, text="سعر البيع", font=("times new roman", 18), bg="white")
         #column 2
 
-        cmb_category = ttk.Combobox(add_items_frame, textvariable=self.var_cat, values=("اختار"), state='readonly', justify=CENTER, font=("times new roman", 15))
-        cmb_category.place(x=150, y=60, width=200)
-        cmb_category.current(0)
+
+        # Setup Combobox
+        self.mycombo = ttk.Combobox(add_items_frame, values=self.data_from_db ,justify=CENTER,state='readonly', font=("times new roman", 15))
+        self.mycombo.place(x=150, y=60, width=200)
+        self.mycombo.current(0)
+        self.mycombo.bind("<<ComboboxSelected>>", self.comboclick)
+        
+        
 
         txt_sup = Entry(add_items_frame, textvariable=self.var_sup, bd=2, font=("times new roman", 15)).place(x=150, y=110, width=200)
 
@@ -71,9 +78,36 @@ class add_items:
         cmb_fill.current(0)
         cmb_fill.bind("<<ComboboxSelected>>", self.update_labels)
 
+
+        
+
+    def fetch_data_from_db(self):
+        # Connect to SQLite database
+        con = sqlite3.connect('items.db')
+        cur = con.cursor()
+
+        # Fetch data 
+        cur.execute("SELECT name FROM items") 
+        data = cur.fetchall()
+
+        # Extract data 
+        data = [item[0] for item in data]
+
+        # Close the connection
+        con.close()
+
+        return data
+
+    def comboclick(self, event):
+        mylabel = Label(self.root, text=self.mycombo.get())
+        mylabel.pack()
+
+        
+        
         
     def update_labels(self, event):
         selected_value = self.var_itemtype.get()
+
 
         self.lbl_fil1.place_forget()
         self.lbl_fil2.place_forget()
