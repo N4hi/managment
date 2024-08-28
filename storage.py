@@ -20,8 +20,6 @@ class add_items:
         self.var_sup = StringVar()
         self.var_itemtype = StringVar()
         self.var_itemname = StringVar()
-        self.var_buycur = StringVar()
-        self.var_sellcur = StringVar()
         self.var_fil1 = StringVar()
         self.var_fil2 = StringVar()
         self.var_numitem = StringVar()
@@ -34,7 +32,6 @@ class add_items:
         self.var_buy = StringVar()
         self.var_sell = StringVar
         self.data_from_db = StringVar()
-        self.data_from_db =self.fetch_data_from_db()
         
         add_items_frame = Frame(self.root, bd=2, relief=RIDGE, bg= 'white')
         add_items_frame.place(x=600, y=10, width=550, height=600)
@@ -46,8 +43,6 @@ class add_items:
         self.lbl_supplier = Label(add_items_frame, text="اسم الموزع", font=("times new roman", 18), bg="white").place(x=400, y=110)
         self.lbl_itemtype = Label(add_items_frame, text="نوع المادة", font=("times new roman", 18), bg="white").place(x=400, y=160)
         self.lbl_itemname = Label(add_items_frame, text="اسم المادة", font=("times new roman", 18), bg="white").place(x=400, y=210)
-        self.lbl_buycur = Label(add_items_frame, text="عملة الشراء", font=("times new roman", 18), bg="white").place(x=390, y=260)
-        self.lbl_sellcur= Label(add_items_frame, text="عملة البيع", font=("times new roman", 18), bg="white").place(x=200, y=260)
         self.lbl_fil1 = Label(add_items_frame, text="تعبئة 1 ", font=("times new roman", 18), bg="white")
         self.lbl_fil2 = Label(add_items_frame, text="تعبئة 2", font=("times new roman", 18), bg="white")
         self.lbl_numitem = Label(add_items_frame, text="عدد الطول", font=("times new roman", 18), bg="white")
@@ -63,10 +58,9 @@ class add_items:
 
 
         # Setup Combobox
-        self.mycombo = ttk.Combobox(add_items_frame, values=self.data_from_db ,justify=CENTER,state='readonly', font=("times new roman", 15))
+        self.mycombo = ttk.Combobox(add_items_frame, values=self.fetch_data_from_db() ,justify=CENTER,state='readonly', font=("times new roman", 15))
         self.mycombo.place(x=150, y=60, width=200)
         self.mycombo.current(0)
-        self.mycombo.bind("<<ComboboxSelected>>", self.comboclick)
         
         
 
@@ -78,29 +72,37 @@ class add_items:
         cmb_fill.current(0)
         cmb_fill.bind("<<ComboboxSelected>>", self.update_labels)
 
+        #entries
+        self.ent_itemname = Entry(add_items_frame, textvariable=self.var_itemname, bd=2, font=("times new roman", 15)).place(x=150, y=210, width=200)
+        self.ent_num = Entry(add_items_frame, textvariable=self.var_num, bd=2, font=("times new roman", 15))
+        self.ent_buy = Entry(add_items_frame, textvariable=self.var_buy, bd=2, font=("times new roman", 15))
+        self.ent_sell = Entry(add_items_frame, textvariable=self.var_sell, bd=2, font=("times new roman", 15))
+        self.combo_fill1 =ttk.Combobox(add_items_frame, textvariable=self.var_fil1,values=self.fetch_data_from_db(), state='readonly', justify=CENTER, font=("times new roman", 15))
+        self.combo_fill2 =ttk.Combobox(add_items_frame, textvariable=self.var_fil2,values=self.fetch_data_from_db(), state='readonly', justify=CENTER, font=("times new roman", 15))
+
+
+
 
         
 
     def fetch_data_from_db(self):
         # Connect to SQLite database
-        con = sqlite3.connect('items.db')
-        cur = con.cursor()
+        conn = sqlite3.connect('items.db')
+        curr = conn.cursor()
 
         # Fetch data 
-        cur.execute("SELECT name FROM items") 
-        data = cur.fetchall()
+        curr.execute("SELECT name FROM items") 
+        data = curr.fetchall()
 
         # Extract data 
         data = [item[0] for item in data]
 
         # Close the connection
-        con.close()
+        conn.close()
 
         return data
 
-    def comboclick(self, event):
-        mylabel = Label(self.root, text=self.mycombo.get())
-        mylabel.pack()
+
 
         
         
@@ -120,6 +122,11 @@ class add_items:
         self.lbl_num.place_forget()
         self.lbl_buy.place_forget()
         self.lbl_sell.place_forget()
+        self.ent_num.place_forget()
+        self.ent_buy.place_forget()
+        self.ent_sell.place_forget()
+        self.combo_fill1.place_forget()
+        self.combo_fill2.place_forget()
 
         if selected_value == "معبئة":
 
@@ -131,12 +138,20 @@ class add_items:
             self.lbl_num2item.place(x=150, y=360)
             self.lbl_buy2item.place(x=150, y=410)
             self.lbl_sell2item.place(x=150, y=460)
+            self.combo_fill1.place(x=300, y=310, width=80)
+            self.combo_fill1.current(0)
+            self.combo_fill2.place(x=20, y=310, width=80)
+            self.combo_fill2.current(0)
 
         else:
             
-            self.lbl_num.place(x=400, y=400)
-            self.lbl_buy.place(x=400, y=450)
-            self.lbl_sell.place(x=400, y=500)
+            self.lbl_num.place(x=420, y=260)
+            self.lbl_buy.place(x=390, y=310)
+            self.lbl_sell.place(x=400, y=360)
+            self.ent_num.place(x=150, y=260, width=200)
+            self.ent_buy.place(x=150, y=310, width=200)
+            self.ent_sell.place(x=150, y=360, width=200)
+            
 
 
 if __name__ == "__main__":
