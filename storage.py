@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox 
 from PIL import Image, ImageTk
 import sqlite3
 import fills
@@ -30,8 +30,9 @@ class add_items:
         self.var_sell2item = StringVar()
         self.var_num = StringVar()
         self.var_buy = StringVar()
-        self.var_sell = StringVar
+        self.var_sell = StringVar()
         self.data_from_db = StringVar()
+        self.var_spinebox = StringVar()
         
         add_items_frame = Frame(self.root, bd=2, relief=RIDGE, bg= 'white')
         add_items_frame.place(x=600, y=10, width=550, height=600)
@@ -61,6 +62,16 @@ class add_items:
         self.mycombo = ttk.Combobox(add_items_frame, values=self.fetch_data_from_db() ,justify=CENTER,state='readonly', font=("times new roman", 15))
         self.mycombo.place(x=150, y=60, width=200)
         self.mycombo.current(0)
+
+
+    
+
+        # Create a Spinbox
+        self.spinbox = Spinbox(add_items_frame ,from_=0, to=100, increment=1.00, format="%.2f" , textvariable=self.var_spinebox , bd=2 , font=("times new roman", 15))
+        self.spinbox.pack(pady=20)
+
+
+
         
         
 
@@ -72,17 +83,18 @@ class add_items:
         cmb_fill.current(0)
         cmb_fill.bind("<<ComboboxSelected>>", self.update_labels)
 
-        #entries
+        #entries1
         self.ent_itemname = Entry(add_items_frame, textvariable=self.var_itemname, bd=2, font=("times new roman", 15)).place(x=150, y=210, width=200)
         self.ent_num = Entry(add_items_frame, textvariable=self.var_num, bd=2, font=("times new roman", 15))
         self.ent_buy = Entry(add_items_frame, textvariable=self.var_buy, bd=2, font=("times new roman", 15))
         self.ent_sell = Entry(add_items_frame, textvariable=self.var_sell, bd=2, font=("times new roman", 15))
+        
         self.combo_fill1 =ttk.Combobox(add_items_frame, textvariable=self.var_fil1,values=self.fetch_data_from_db(), state='readonly', justify=CENTER, font=("times new roman", 15))
         self.combo_fill2 =ttk.Combobox(add_items_frame, textvariable=self.var_fil2,values=self.fetch_data_from_db(), state='readonly', justify=CENTER, font=("times new roman", 15))
-
-
-
-
+        #entries2
+        self.ent_num2 = Entry(add_items_frame, textvariable=self.var_num, bd=2, font=("times new roman", 15))
+        self.ent_buy2 = Entry(add_items_frame, textvariable=self.var_buy, bd=2, font=("times new roman", 15))
+        self.ent_sell2 = Entry(add_items_frame, textvariable=self.var_sell, bd=2, font=("times new roman", 15))
         
 
     def fetch_data_from_db(self):
@@ -127,6 +139,10 @@ class add_items:
         self.ent_sell.place_forget()
         self.combo_fill1.place_forget()
         self.combo_fill2.place_forget()
+        self.ent_sell2.place_forget()
+        self.ent_num2.place_forget()
+        self.ent_buy2.place_forget()
+        
 
         if selected_value == "معبئة":
 
@@ -142,15 +158,21 @@ class add_items:
             self.combo_fill1.current(0)
             self.combo_fill2.place(x=20, y=310, width=80)
             self.combo_fill2.current(0)
-
+            self.ent_num.place(x=285, y=360, width=100)
+            self.ent_buy.place(x=285, y=415, width=100)
+            self.ent_sell.place(x=285, y=460, width=100)
+            self.ent_num2.place(x=20, y=360, width=100)
+            self.ent_buy2.place(x=20, y=415, width=100)
+            self.ent_sell2.place(x=20, y=460, width=100)
+            self.spinbox.place( x=180, y=310, width=80)
         else:
             
             self.lbl_num.place(x=420, y=260)
             self.lbl_buy.place(x=390, y=310)
             self.lbl_sell.place(x=400, y=360)
-            self.ent_num.place(x=150, y=260, width=200)
-            self.ent_buy.place(x=150, y=310, width=200)
-            self.ent_sell.place(x=150, y=360, width=200)
+            self.ent_num.place(x=150, y=360, width=200)
+            self.ent_buy.place(x=150, y=410, width=200)
+            self.ent_sell.place(x=150, y=460, width=200)
             
 
 
